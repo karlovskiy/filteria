@@ -24,9 +24,10 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github:karlovskiy/filteria</connection>
-        <developerConnection>scm:git:git://github/karlovskiy:filteria</developerConnection>
-        <url>https://github.com/karlovskiy/filteria</url>
+        <connection>scm:git:git://github:karlovskiy/filteria.git</connection>
+        <url>scm:git:git@github:karlovskiy/filteria.git</url>
+        <developerConnection>scm:git:git://github:karlovskiy/filteria.git</developerConnection>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
