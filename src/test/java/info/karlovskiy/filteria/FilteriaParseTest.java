@@ -18,7 +18,7 @@ public class FilteriaParseTest {
 
     @Before
     public void before() {
-        filteria = new Filteria();
+        filteria = Filteria.create();
     }
 
     @Test
