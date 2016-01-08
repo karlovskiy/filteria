@@ -7,6 +7,11 @@
         <author email="yexella@gmail.com">Karlovskiy Alexey</author>
     </properties>
     <body>
+        <release version="0.2" date="2015-01-08" description="Maven Central integration">
+            <action dev="karlovskiy" type="add" issue="03">
+                Maven Central integration.
+            </action>
+        </release>
         <release version="0.2" date="2015-01-08" description="Sort integration">
             <action dev="karlovskiy" type="add" issue="02">
                 Sort integration. Filter refactoring.
