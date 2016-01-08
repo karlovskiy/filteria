@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * @author karlovskiy
  * @since 1.0, 1/3/16
  */
-public enum TokenType {
+enum OperationType {
 
     NOT_EQUALS("(.*)::!(.*)"),
     CONTAINS("(.*)::\\*(.*)\\*"),
@@ -21,7 +21,7 @@ public enum TokenType {
 
     private final List<Pattern> patterns;
 
-    TokenType(String... patterns) {
+    OperationType(String... patterns) {
         List<Pattern> list = new ArrayList<>();
         for (String pattern : patterns) {
             list.add(Pattern.compile(pattern));
@@ -29,7 +29,7 @@ public enum TokenType {
         this.patterns = Collections.unmodifiableList(list);
     }
 
-    public List<Pattern> getPatterns() {
+    List<Pattern> getPatterns() {
         return patterns;
     }
 }

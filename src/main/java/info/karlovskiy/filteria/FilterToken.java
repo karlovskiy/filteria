@@ -6,27 +6,27 @@ package info.karlovskiy.filteria;
  * @author karlovskiy
  * @since 1.0, 1/3/16
  */
-public class ParsedToken {
+class FilterToken {
     private final String name;
     private final String value;
-    private final TokenType tokenType;
+    private final OperationType operationType;
 
-    public ParsedToken(String name, String value, TokenType tokenType) {
+    FilterToken(String name, String value, OperationType operationType) {
         this.name = name;
         this.value = value;
-        this.tokenType = tokenType;
+        this.operationType = operationType;
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public String getValue() {
+    String getValue() {
         return value;
     }
 
-    public TokenType getTokenType() {
-        return tokenType;
+    OperationType getOperationType() {
+        return operationType;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class ParsedToken {
         final StringBuilder sb = new StringBuilder("ParsedToken{");
         sb.append("name='").append(name).append('\'');
         sb.append(", value='").append(value).append('\'');
-        sb.append(", operator=").append(tokenType);
+        sb.append(", operation=").append(operationType);
         sb.append('}');
         return sb.toString();
     }

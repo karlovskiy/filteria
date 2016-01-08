@@ -7,6 +7,11 @@
         <author email="yexella@gmail.com">Karlovskiy Alexey</author>
     </properties>
     <body>
+        <release version="0.2" date="2015-01-08" description="Sort integration">
+            <action dev="karlovskiy" type="add" issue="02">
+                Sort integration. Filter refactoring.
+            </action>
+        </release>
         <release version="0.1" date="2015-01-03" description="Initial version">
             <action dev="karlovskiy" type="add" issue="01">
                 Initial version. Operators: not equals, contains, starts_with, ends_with, equals.
