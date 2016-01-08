@@ -1,2 +1,2 @@
 # filteria
-Filtering and sorting API for hibernate criteria
+Filtering and sorting API for hibernate criteria generation
