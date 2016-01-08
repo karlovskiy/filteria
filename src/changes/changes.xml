@@ -7,7 +7,7 @@
         <author email="yexella@gmail.com">Karlovskiy Alexey</author>
     </properties>
     <body>
-        <release version="0.2" date="2015-01-08" description="Maven Central integration">
+        <release version="0.3" date="2015-01-09" description="Maven Central integration">
             <action dev="karlovskiy" type="add" issue="03">
                 Maven Central integration.
             </action>
