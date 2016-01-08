@@ -4,7 +4,7 @@
     <groupId>info.karlovskiy</groupId>
     <artifactId>filteria</artifactId>
     <packaging>jar</packaging>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
 
     <name>FILTERIA :: FILTER CRITERIA GENERATOR</name>
     <description>FILTERIA :: FILTER CRITERIA GENERATOR</description>
