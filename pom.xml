@@ -4,7 +4,7 @@
     <groupId>info.karlovskiy</groupId>
     <artifactId>filteria</artifactId>
     <packaging>jar</packaging>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
 
     <name>FILTERIA :: FILTER CRITERIA GENERATOR</name>
     <description>FILTERIA :: FILTER CRITERIA GENERATOR</description>
@@ -27,7 +27,7 @@
         <connection>scm:git:git@github:karlovskiy/filteria.git</connection>
         <url>scm:git:git@github:karlovskiy/filteria.git</url>
         <developerConnection>scm:git:git@github:karlovskiy/filteria.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v0.4</tag>
     </scm>
 
     <licenses>
