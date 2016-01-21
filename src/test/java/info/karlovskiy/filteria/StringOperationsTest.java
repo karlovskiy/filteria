@@ -12,7 +12,7 @@ import java.util.List;
  * @author karlovskiy
  * @since 1.0, 1/3/16
  */
-public class FilterParseTest {
+public class StringOperationsTest {
 
     private Filteria filteria;
 
@@ -59,6 +59,16 @@ public class FilterParseTest {
         assertTokenParsed(actual, "name", "todd", OperationType.NOT_EQUALS);
         assertTokenParsed(actual, "city", "denver", OperationType.NOT_EQUALS);
         assertTokenParsed(actual, "title", "grand poobah", OperationType.NOT_EQUALS);
+    }
+
+    @Test
+    public void testNull() {
+        String filter = "name::^null|city::!^null|title::^null";
+        List<FilterToken> actual = filteria.filter(filter).filterTokens();
+        Assert.assertEquals(3, actual.size());
+        assertTokenParsed(actual, "name", "^null", OperationType.IS_NULL);
+        assertTokenParsed(actual, "city", "^null", OperationType.IS_NOT_NULL);
+        assertTokenParsed(actual, "title", "^null", OperationType.IS_NULL);
     }
 
     private void assertTokenParsed(List<FilterToken> tokens, String name, String value, OperationType operationType) {

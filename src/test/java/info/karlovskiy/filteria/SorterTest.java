@@ -12,7 +12,7 @@ import java.util.List;
  * @author karlovskiy
  * @since 1.0, 1/8/16
  */
-public class SorterParseTest {
+public class SorterTest {
 
     private Filteria filteria;
 

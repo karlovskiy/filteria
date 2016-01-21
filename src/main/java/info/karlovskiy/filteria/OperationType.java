@@ -13,10 +13,16 @@ import java.util.regex.Pattern;
  */
 enum OperationType {
 
+    LESS_OR_EQUALS("(.*)::<=(.*)"),
+    LESS("(.*)::<(.*)"),
+    GREATER_OR_EQUALS("(.*)::>=(.*)"),
+    GREATER("(.*)::>(.*)"),
+    IS_NOT_NULL("(.*)::!(\\^null)"),
     NOT_EQUALS("(.*)::!(.*)"),
     CONTAINS("(.*)::\\*(.*)\\*"),
     STARTS_WITH("(.*)::(.*)\\*"),
     ENDS_WITH("(.*)::\\*(.*)"),
+    IS_NULL("(.*)::(\\^null)"),
     EQUALS("(.*)::(.*)");// must always be last one
 
     private final List<Pattern> patterns;

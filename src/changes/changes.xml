@@ -7,6 +7,14 @@
         <author email="yexella@gmail.com">Karlovskiy Alexey</author>
     </properties>
     <body>
+        <release version="0.4" date="2015-01-22" description="Numeric types integration">
+            <action dev="karlovskiy" type="add" issue="04b">
+                New operations: less, less or equals, greater, greater or equals, is null, is not null
+            </action>
+            <action dev="karlovskiy" type="add" issue="04a">
+                Numeric types support.
+            </action>
+        </release>
         <release version="0.3" date="2015-01-09" description="Maven Central integration">
             <action dev="karlovskiy" type="add" issue="03">
                 Maven Central integration.

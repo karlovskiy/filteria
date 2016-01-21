@@ -5,6 +5,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.metadata.ClassMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,21 +27,34 @@ public class Filteria {
 
     private static final Logger logger = LoggerFactory.getLogger(Filteria.class);
 
+    private final ClassMetadata classMetadata;
     private static final String TOKEN_DELIMITER = "\\|";
     private List<FilterToken> filterTokens = Collections.emptyList();
     private List<SorterToken> sorterTokens = Collections.emptyList();
     private Map<String, String> propertyByName = new HashMap<>();
 
-    private Filteria() {
+    private Filteria(ClassMetadata classMetadata) {
+        this.classMetadata = classMetadata;
     }
 
     /**
-     * Filteria creation
+     * Filteria creation without class metadata
      *
      * @return filteria
      */
     public static Filteria create() {
-        return new Filteria();
+        logger.warn("Filteria constructed without classmetadata, Only properties of string type allowed");
+        return new Filteria(null);
+    }
+
+    /**
+     * Filteria creation wit class metadata
+     *
+     * @param classMetadata class metadata
+     * @return filteria
+     */
+    public static Filteria create(ClassMetadata classMetadata) {
+        return new Filteria(classMetadata);
     }
 
     /**
@@ -132,7 +146,22 @@ public class Filteria {
             String property = getProperty(name);
             OperationType operationType = filterToken.getOperationType();
             String value = filterToken.getValue();
+            Class valueClass = getPropertyClass(property);
+            ValueType valueType = ValueType.valueOf(valueClass, operationType);
+            Object convertedValue = valueType.convert(value, valueClass);
             switch (operationType) {
+                case GREATER_OR_EQUALS:
+                    criteria.add(Restrictions.ge(property, convertedValue));
+                    break;
+                case GREATER:
+                    criteria.add(Restrictions.gt(property, convertedValue));
+                    break;
+                case LESS_OR_EQUALS:
+                    criteria.add(Restrictions.le(property, convertedValue));
+                    break;
+                case LESS:
+                    criteria.add(Restrictions.lt(property, convertedValue));
+                    break;
                 case CONTAINS:
                     criteria.add(Restrictions.ilike(property, value, MatchMode.ANYWHERE));
                     break;
@@ -142,15 +171,22 @@ public class Filteria {
                 case STARTS_WITH:
                     criteria.add(Restrictions.ilike(property, value, MatchMode.START));
                     break;
+                case IS_NOT_NULL:
+                    criteria.add(Restrictions.isNotNull(property));
+                    break;
                 case NOT_EQUALS:
-                    criteria.add(Restrictions.ne(property, value));
+                    criteria.add(Restrictions.ne(property, convertedValue));
+                    break;
+                case IS_NULL:
+                    criteria.add(Restrictions.isNull(property));
                     break;
                 case EQUALS:
-                    criteria.add(Restrictions.eq(property, value));
+                    criteria.add(Restrictions.eq(property, convertedValue));
                     break;
                 default:
                     throw new FilteriaException("Unknown token type " + operationType);
             }
+            logger.info("Filteria {} operation for {} has been added to criteria", operationType, property);
         }
         // sorter
         for (SorterToken sorterToken : sorterTokens) {
@@ -158,6 +194,7 @@ public class Filteria {
             boolean desc = sorterToken.isDesc();
             String property = getProperty(name);
             criteria.addOrder(desc ? Order.desc(property) : Order.asc(property));
+            logger.info("Filteria sort by {} {} has been added to criteria", property, (desc ? "DESC" : "ASC"));
         }
         return this;
     }
@@ -176,6 +213,18 @@ public class Filteria {
             throw new FilteriaException("Property for name " + name + " not found");
         }
         return property;
+    }
+
+    private Class getPropertyClass(String property) {
+        if (classMetadata != null) {
+            Class clazz = classMetadata.getPropertyType(property).getReturnedClass();
+            if (clazz == null) {
+                throw new FilteriaException("Class for property " + property + " not found in the metadata");
+            }
+            return clazz;
+        }
+        // if class metadata is not defined only strings supported
+        return String.class;
     }
 
 }
