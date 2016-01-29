@@ -3,10 +3,15 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
     <properties>
-        <title>PMR changes list</title>
+        <title>Filteria changes list</title>
         <author email="yexella@gmail.com">Karlovskiy Alexey</author>
     </properties>
     <body>
+        <release version="0.5" date="2015-01-29" description="Boolean type integration">
+            <action dev="karlovskiy" type="add" issue="05a">
+                Boolean type support.
+            </action>
+        </release>
         <release version="0.4" date="2015-01-22" description="Numeric types integration">
             <action dev="karlovskiy" type="add" issue="04b">
                 New operations: less, less or equals, greater, greater or equals, is null, is not null

@@ -35,9 +35,10 @@ enum ValueType {
                 return value;
             }
             try {
-                if (clazz == Integer.class) {
-                    Integer integer = Integer.valueOf(value);
-                    return integer;
+                if (clazz == Long.class) {
+                    return Long.valueOf(value);
+                } else if (clazz == Integer.class) {
+                    return Integer.valueOf(value);
                 } else if (clazz == BigDecimal.class) {
                     DecimalFormatSymbols symbols = new DecimalFormatSymbols();
                     //symbols.setGroupingSeparator(',');
@@ -52,6 +53,12 @@ enum ValueType {
                         name().toLowerCase() + " for class " + clazz.getSimpleName(), e);
             }
             throw new IllegalArgumentException("Unsupported numeric type class " + clazz.getName());
+        }
+    },
+    BOOLEAN(EQUALS) {
+        @Override
+        Object convert(String value, Class clazz) {
+            return Boolean.valueOf(value);
         }
     };
 
@@ -71,6 +78,8 @@ enum ValueType {
             valueType = STRING;
         } else if (Number.class.isAssignableFrom(clazz)) {
             valueType = NUMBER;
+        } else if (clazz == Boolean.class || clazz == boolean.class) {
+            valueType = BOOLEAN;
         } else {
             throw new IllegalArgumentException("Unsupported value class " + clazz.getName());
         }
