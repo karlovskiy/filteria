@@ -7,6 +7,11 @@
         <author email="yexella@gmail.com">Karlovskiy Alexey</author>
     </properties>
     <body>
+        <release version="0.6" date="2015-02-10" description="Nested properties types support">
+            <action dev="karlovskiy" type="add" issue="06a">
+                API refactoring for support of nested properties types.
+            </action>
+        </release>
         <release version="0.5" date="2015-01-29" description="Boolean type integration">
             <action dev="karlovskiy" type="add" issue="05a">
                 Boolean type support.

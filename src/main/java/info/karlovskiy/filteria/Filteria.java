@@ -2,10 +2,11 @@ package info.karlovskiy.filteria;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.metadata.ClassMetadata;
+import org.hibernate.type.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,34 +28,26 @@ public class Filteria {
 
     private static final Logger logger = LoggerFactory.getLogger(Filteria.class);
 
-    private final ClassMetadata classMetadata;
+    private final SessionFactory sessionFactory;
+    private final Class baseClass;
     private static final String TOKEN_DELIMITER = "\\|";
     private List<FilterToken> filterTokens = Collections.emptyList();
     private List<SorterToken> sorterTokens = Collections.emptyList();
-    private Map<String, String> propertyByName = new HashMap<>();
+    private Map<String, Property> propertyByName = new HashMap<>();
 
-    private Filteria(ClassMetadata classMetadata) {
-        this.classMetadata = classMetadata;
+    private Filteria(SessionFactory sessionFactory, Class baseClass) {
+        this.sessionFactory = sessionFactory;
+        this.baseClass = baseClass;
     }
 
     /**
-     * Filteria creation without class metadata
+     * Filteria creation
      *
+     * @param sessionFactory session factory
      * @return filteria
      */
-    public static Filteria create() {
-        logger.warn("Filteria constructed without classmetadata, Only properties of string type allowed");
-        return new Filteria(null);
-    }
-
-    /**
-     * Filteria creation wit class metadata
-     *
-     * @param classMetadata class metadata
-     * @return filteria
-     */
-    public static Filteria create(ClassMetadata classMetadata) {
-        return new Filteria(classMetadata);
+    public static Filteria create(SessionFactory sessionFactory, Class baseClass) {
+        return new Filteria(sessionFactory, baseClass);
     }
 
     /**
@@ -65,7 +58,9 @@ public class Filteria {
      * @return self
      */
     public Filteria parameter(String name, String property) {
-        propertyByName.put(name, property);
+        Class clazz = propertyClass(property);
+        Property prop = new Property(name, property, clazz);
+        propertyByName.put(name, prop);
         return this;
     }
 
@@ -143,10 +138,11 @@ public class Filteria {
         // filter
         for (FilterToken filterToken : filterTokens) {
             String name = filterToken.getName();
-            String property = getProperty(name);
+            Property prop = getProperty(name);
+            String property = prop.getProperty();
             OperationType operationType = filterToken.getOperationType();
             String value = filterToken.getValue();
-            Class valueClass = getPropertyClass(property);
+            Class valueClass = prop.getClazz();
             ValueType valueType = ValueType.valueOf(valueClass, operationType);
             Object convertedValue = valueType.convert(value, valueClass);
             switch (operationType) {
@@ -192,7 +188,8 @@ public class Filteria {
         for (SorterToken sorterToken : sorterTokens) {
             String name = sorterToken.getName();
             boolean desc = sorterToken.isDesc();
-            String property = getProperty(name);
+            Property prop = getProperty(name);
+            String property = prop.getProperty();
             criteria.addOrder(desc ? Order.desc(property) : Order.asc(property));
             logger.info("Filteria sort by {} {} has been added to criteria", property, (desc ? "DESC" : "ASC"));
         }
@@ -207,24 +204,26 @@ public class Filteria {
         return sorterTokens;
     }
 
-    private String getProperty(String name) {
-        String property = propertyByName.get(name);
+    private Property getProperty(String name) {
+        Property property = propertyByName.get(name);
         if (property == null) {
             throw new FilteriaException("Property for name " + name + " not found");
         }
         return property;
     }
 
-    private Class getPropertyClass(String property) {
-        if (classMetadata != null) {
-            Class clazz = classMetadata.getPropertyType(property).getReturnedClass();
-            if (clazz == null) {
-                throw new FilteriaException("Class for property " + property + " not found in the metadata");
+    private Class propertyClass(String property) {
+        String[] subPropertyNames = property.split("\\.");
+        Class baseClass = this.baseClass;
+        for (int i = 0; i < subPropertyNames.length; i++) {
+            String subProperty = subPropertyNames[i];
+            Type type = sessionFactory.getClassMetadata(baseClass).getPropertyType(subProperty);
+            if (i == subPropertyNames.length - 1) {
+                return type.getReturnedClass();
             }
-            return clazz;
+            baseClass = type.getReturnedClass();
         }
-        // if class metadata is not defined only strings supported
-        return String.class;
+        throw new FilteriaException("Property class " + property + " not found in the metadata");
     }
 
 }

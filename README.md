@@ -7,6 +7,6 @@ Filtering and sorting API for hibernate criteria generation
 <dependency>
     <groupId>info.karlovskiy</groupId>
     <artifactId>filteria</artifactId>
-    <version>0.5</version>
+    <version>0.6</version>
 </dependency>
 ```

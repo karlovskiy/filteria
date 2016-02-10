@@ -1,11 +1,19 @@
 package info.karlovskiy.filteria;
 
-import info.karlovskiy.filteria.metadata.IntegerClassMetadata;
+import org.hibernate.SessionFactory;
+import org.hibernate.metadata.ClassMetadata;
+import org.hibernate.type.IntegerType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
+
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
 /**
  * Here will be javadoc
@@ -13,12 +21,22 @@ import java.util.List;
  * @author karlovskiy
  * @since 1.0, 1/21/16
  */
+@RunWith(MockitoJUnitRunner.class)
 public class NumberOperationsTest {
+
+    @Mock
+    private SessionFactory sessionFactory;
+
+    @Mock
+    private ClassMetadata classMetadata;
+
     private Filteria filteria;
 
     @Before
     public void before() {
-        filteria = Filteria.create(new IntegerClassMetadata());
+        when(classMetadata.getPropertyType(anyString())).thenReturn(IntegerType.INSTANCE);
+        when(sessionFactory.getClassMetadata(Integer.class)).thenReturn(classMetadata);
+        filteria = Filteria.create(sessionFactory, Integer.class);
     }
 
     @Test
