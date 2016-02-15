@@ -1,6 +1,6 @@
 Filteria
 ========
-[![Maven Central](https://img.shields.io/maven-central/v/info.karlovskiy/filteria.svg)]() [![GitHub license](https://img.shields.io/github/license/karlovskiy/filteria.svg)]()
+[![Maven Central](https://img.shields.io/maven-central/v/info.karlovskiy/filteria.svg)](https://img.shields.io/maven-central/v/info.karlovskiy/filteria.svg) [![GitHub license](https://img.shields.io/github/license/karlovskiy/filteria.svg)](https://img.shields.io/github/license/karlovskiy/filteria.svg)
 
 API for generation filtering and sorting restrictions from special syntax parameters and appending them to the criteria.
 You need only two special formatted parameters (for example form parameters from you javascript frontend)
