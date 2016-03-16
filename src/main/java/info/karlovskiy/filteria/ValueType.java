@@ -60,6 +60,19 @@ enum ValueType {
         Object convert(String value, Class clazz) {
             return Boolean.valueOf(value);
         }
+    },
+    ENUM(EQUALS, NOT_EQUALS, IS_NOT_NULL, IS_NULL) {
+        @Override
+        Object convert(String value, Class clazz) {
+            if ("^null".equals(value)) {
+                return value;
+            }
+            try {
+                return Enum.valueOf(clazz, value);
+            } catch (Exception e) {
+                throw new FilteriaException("Error parsing " + value + " to class " + clazz.getSimpleName());
+            }
+        }
     };
 
     private final EnumSet<OperationType> operations;
@@ -80,6 +93,8 @@ enum ValueType {
             valueType = NUMBER;
         } else if (clazz == Boolean.class || clazz == boolean.class) {
             valueType = BOOLEAN;
+        } else if (Enum.class.isAssignableFrom(clazz)) {
+            valueType = ENUM;
         } else {
             throw new IllegalArgumentException("Unsupported value class " + clazz.getName());
         }

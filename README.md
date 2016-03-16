@@ -44,8 +44,8 @@ Currently filteria supports operations:
 
 Operation | Supported types | Description
 --- | --- | ---
-**EQUALS** | string, number, boolean | ```MAIN``` - string, number ( ```true``` , ```false``` - boolean )
-**NOT EQUALS** | string, number | ```!MAIN```
+**EQUALS** | string, number, enumeration, boolean | ```MAIN``` - string, number, enumeration ( ```true``` , ```false``` - boolean )
+**NOT EQUALS** | string, number, enumeration | ```!MAIN```
 **STARTS WITH** | string | ```mai*```
 **ENDS WITH** | string | ```*ain```
 **CONTAINS** | string | ```*ai*```
@@ -53,8 +53,8 @@ Operation | Supported types | Description
 **LESS OR EQUALS** | number | ```<=10```
 **GREATER** | number | ```>0```
 **GREATER OR EQUALS** | number | ```>=-30```
-**IS NULL** | string, number | ```^null```
-**IS NOT NULL** | string, number | ```!^null```
+**IS NULL** | string, number, enumeration | ```^null```
+**IS NOT NULL** | string, number, enumeration | ```!^null```
 
 #### Sorting
 Sorting string has format:
@@ -74,6 +74,6 @@ Maven dependency
 <dependency>
     <groupId>info.karlovskiy</groupId>
     <artifactId>filteria</artifactId>
-    <version>0.6</version>
+    <version>0.7</version>
 </dependency>
 ```

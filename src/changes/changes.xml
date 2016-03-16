@@ -7,17 +7,22 @@
         <author email="yexella@gmail.com">Karlovskiy Alexey</author>
     </properties>
     <body>
-        <release version="0.6" date="2015-02-10" description="Nested properties types support">
+        <release version="0.7" date="2016-03-12" description="Enum types support">
+            <action dev="karlovskiy" type="add" issue="07a">
+                Enumeration types support.
+            </action>
+        </release>
+        <release version="0.6" date="2016-02-10" description="Nested properties types support">
             <action dev="karlovskiy" type="add" issue="06a">
                 API refactoring for support of nested properties types.
             </action>
         </release>
-        <release version="0.5" date="2015-01-29" description="Boolean type integration">
+        <release version="0.5" date="2016-01-29" description="Boolean type integration">
             <action dev="karlovskiy" type="add" issue="05a">
                 Boolean type support.
             </action>
         </release>
-        <release version="0.4" date="2015-01-22" description="Numeric types integration">
+        <release version="0.4" date="2016-01-22" description="Numeric types integration">
             <action dev="karlovskiy" type="add" issue="04b">
                 New operations: less, less or equals, greater, greater or equals, is null, is not null
             </action>
@@ -25,17 +30,17 @@
                 Numeric types support.
             </action>
         </release>
-        <release version="0.3" date="2015-01-09" description="Maven Central integration">
+        <release version="0.3" date="2016-01-09" description="Maven Central integration">
             <action dev="karlovskiy" type="add" issue="03">
                 Maven Central integration.
             </action>
         </release>
-        <release version="0.2" date="2015-01-08" description="Sort integration">
+        <release version="0.2" date="2016-01-08" description="Sort integration">
             <action dev="karlovskiy" type="add" issue="02">
                 Sort integration. Filter refactoring.
             </action>
         </release>
-        <release version="0.1" date="2015-01-03" description="Initial version">
+        <release version="0.1" date="2016-01-03" description="Initial version">
             <action dev="karlovskiy" type="add" issue="01">
                 Initial version. Operators: not equals, contains, starts_with, ends_with, equals.
             </action>
