@@ -7,6 +7,11 @@
         <author email="yexella@gmail.com">Karlovskiy Alexey</author>
     </properties>
     <body>
+        <release version="0.8" date="2016-08-29" description="Support of nested properties">
+            <action dev="karlovskiy" type="add" issue="08a">
+                Support of nested properties with nesting greater than 2.
+            </action>
+        </release>
         <release version="0.7" date="2016-03-12" description="Enum types support">
             <action dev="karlovskiy" type="add" issue="07a">
                 Enumeration types support.

@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.hibernate.type.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,8 @@ public class Filteria {
     private static final String TOKEN_DELIMITER = "\\|";
     private List<FilterToken> filterTokens = Collections.emptyList();
     private List<SorterToken> sorterTokens = Collections.emptyList();
+    private Map<String, String> aliases = new HashMap<>();
+    private Map<String, JoinType> aliasJoins = new HashMap<>();
     private Map<String, Property> propertyByName = new HashMap<>();
 
     private Filteria(SessionFactory sessionFactory, Class baseClass) {
@@ -58,9 +61,46 @@ public class Filteria {
      * @return self
      */
     public Filteria parameter(String name, String property) {
-        Class clazz = propertyClass(property);
+        Class clazz = null;
+        String[] subPropertyNames = property.split("\\.");
+        Class baseClass = this.baseClass;
+        for (int i = 0; i < subPropertyNames.length; i++) {
+            String subProperty = subPropertyNames[i];
+            Type type = sessionFactory.getClassMetadata(baseClass).getPropertyType(subProperty);
+            if (i == subPropertyNames.length - 1) {
+                clazz = type.getReturnedClass();
+                break;
+            }
+            baseClass = type.getReturnedClass();
+            String alias = subPropertyNames.length > 2 && i > 0 ?
+                    subPropertyNames[i - 1] + "." + subProperty : subProperty;
+            aliases.put(subProperty, alias);
+        }
+        if (clazz == null) {
+            throw new FilteriaException("Property class " + property + " not found in the metadata");
+        }
+        int index = StringUtils.lastOrdinalIndexOf(property, ".", 2);
+        if (index != -1) {
+            property = property.substring(index + 1);
+        }
         Property prop = new Property(name, property, clazz);
         propertyByName.put(name, prop);
+        return this;
+    }
+
+    /**
+     * Adding join type for an alias.
+     * By default if not specified by this method join type INNER JOIN will be used.
+     *
+     * @param alias    alias
+     * @param joinType join type
+     * @return self
+     */
+    public Filteria aliasJoinType(String alias, JoinType joinType) {
+        if (StringUtils.isEmpty(alias)) {
+            return this;
+        }
+        aliasJoins.put(alias, joinType);
         return this;
     }
 
@@ -135,6 +175,16 @@ public class Filteria {
      * @return self
      */
     public Filteria appendTo(Criteria criteria) {
+        // aliases
+        for (Map.Entry<String, String> aliasEntry : aliases.entrySet()) {
+            String alias = aliasEntry.getKey();
+            String associationPath = aliasEntry.getValue();
+            JoinType joinType = aliasJoins.get(alias);
+            if (joinType == null) {
+                joinType = JoinType.INNER_JOIN;
+            }
+            criteria.createAlias(associationPath, alias, joinType);
+        }
         // filter
         for (FilterToken filterToken : filterTokens) {
             String name = filterToken.getName();
@@ -210,20 +260,6 @@ public class Filteria {
             throw new FilteriaException("Property for name " + name + " not found");
         }
         return property;
-    }
-
-    private Class propertyClass(String property) {
-        String[] subPropertyNames = property.split("\\.");
-        Class baseClass = this.baseClass;
-        for (int i = 0; i < subPropertyNames.length; i++) {
-            String subProperty = subPropertyNames[i];
-            Type type = sessionFactory.getClassMetadata(baseClass).getPropertyType(subProperty);
-            if (i == subPropertyNames.length - 1) {
-                return type.getReturnedClass();
-            }
-            baseClass = type.getReturnedClass();
-        }
-        throw new FilteriaException("Property class " + property + " not found in the metadata");
     }
 
 }
